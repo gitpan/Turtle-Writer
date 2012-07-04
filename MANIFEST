@@ -3,7 +3,6 @@ MANIFEST
 META.yml
 Makefile.PL
 README
-README.md
 dist.ini
 lib/Turtle/Writer.pm
 t/turtle.t
