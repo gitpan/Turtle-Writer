@@ -1,6 +1,6 @@
 package Turtle::Writer;
 {
-  $Turtle::Writer::VERSION = '0.002';
+  $Turtle::Writer::VERSION = '0.003';
 }
 #ABSTRACT: Write RDF/Turtle documents without non-core package dependencies
 
@@ -33,9 +33,14 @@ sub turtle_statement {
         (defined $o and $o ne '') ? "$p $o" : undef;
     } keys %statements;
 
-    return "" unless @s;
+	return "" unless @s;
 
-    return "$subject " . join(" ;\n" , shift @s, map { "    $_" } @s) . " .\n";
+	my $ttl = join(" ;\n" , shift @s, map { "    $_" } @s); 
+	if (defined $subject) {
+	    return "$subject $ttl .\n";
+	} else {
+	    return "[ $ttl ] .\n";
+	}
 }
 
 
@@ -108,7 +113,7 @@ Turtle::Writer - Write RDF/Turtle documents without non-core package dependencie
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -171,7 +176,7 @@ Jakob Voss
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Jakob Voss.
+This software is copyright (c) 2013 by Jakob Voss.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -33,7 +33,10 @@ foreach ( undef, [ ], "" ) {
 my $ttl = turtle_statement( '<>', 'dc:title' => '"foo"' );
 is( $ttl, "<> dc:title \"foo\" .\n", "turtle_statement" );
 
-$ttl = <<'RDF';
+$ttl = turtle_statement( undef, 'dc:title' => '"foo"' );
+is( $ttl, "[ dc:title \"foo\" ] .\n", "turtle_statement" );
+
+my $exp = <<'RDF';
 <http://example.org> dc:creator "Terry Winograd", "Fernando Flores" ;
     a <http://purl.org/ontology/bibo/Document> ;
     dc:title "Understanding Computers and Cognition"@en ;
@@ -41,7 +44,7 @@ $ttl = <<'RDF';
 RDF
 
 my $uri = "http://example.org";
-is( turtle_statement( 
+my $got = turtle_statement( 
     "<$uri>",
       "a" => "<http://purl.org/ontology/bibo/Document>",
       "dc:creator" => { # plain literals are escaped
@@ -51,5 +54,8 @@ is( turtle_statement(
       "dc:title" =>
           { en => "Understanding Computers and Cognition" },
       "dc:description" => undef,  # will be ignored
-  ), $ttl, 'full example' );
+);
+
+is( join("\n",sort split("\n",$got)), 
+    join("\n",sort split("\n",$exp)), 'full example' );
 
