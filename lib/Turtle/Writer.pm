@@ -1,6 +1,6 @@
 package Turtle::Writer;
 {
-  $Turtle::Writer::VERSION = '0.003';
+  $Turtle::Writer::VERSION = '0.004';
 }
 #ABSTRACT: Write RDF/Turtle documents without non-core package dependencies
 
@@ -102,10 +102,14 @@ sub turtle_uri {
     return "<$value>";
 }
 
+
 1;
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -113,7 +117,7 @@ Turtle::Writer - Write RDF/Turtle documents without non-core package dependencie
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -170,16 +174,42 @@ Returns an URI in Turtle syntax, that is C<< "<$uri>" >>. Returns the
 empty string, if C<$uri> is C<undef>, but C<< <> >> if C<$uri> is the
 empty string. In most cases you better directly write C<< "<$uri>" >>.
 
+=head1 SEE ALSO
+
+For a more convenient way to create RDF data, have a look at L<RDF::aREF>. The
+example given above can be translated to: 
+
+    use RDF::aREF;
+    use RDF::Trine::Model;
+    use RDF::Trine::Serializer;
+
+    my $model = RDF::Trine::Model->new;
+
+    my $uri = 'http://example.org/';
+    decode_aref( 
+        {
+            $uri => {
+                a          => 'http://purl.org/ontology/bibo/Document',
+                dc_creator => [ 'Terry Winograd', 'Fernando Flores' ],
+                dc_date    => '1987^xsd:gYear',
+                dc_title   => 'Understanding Computers and Cognition@en',
+                dc_description => undef,
+            },
+        },
+        callback => $model
+    );
+
+    print RDF::Trine::Serializer->new('Turtle')->serialize_model_to_string($model);
+
 =head1 AUTHOR
 
-Jakob Voss
+Jakob Voß
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Jakob Voss.
+This software is copyright (c) 2014 by Jakob Voß.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
